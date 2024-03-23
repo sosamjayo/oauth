@@ -8,9 +8,21 @@ on:
     branches:
       - main
 
+env:
+  REDIS_ADDR: localhost:6379
+  REDIS_PASSWORD: password
+
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 127.0.0.1:6379:6379
+        env:
+          REDIS_PASSWORD: password
 
     steps:
       - uses: actions/checkout@v4
@@ -25,4 +37,4 @@ jobs:
         run: go mod download
       
       - name: Run tests
-        run: go test api/... -v --count=1
+        run: go test ./api/... -v --count=1 -p=1

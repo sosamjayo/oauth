@@ -1,3 +1,6 @@
+REDIS_ADDR="localhost:6379"
+REDIS_PASSWORD="password"
+
 # docker compsoe
 up:
 	docker compose up -d --remove-orphans
@@ -8,6 +11,7 @@ build:
 
 # Go
 lint:
-	staticcheck api/...
-test:
-	go test api/... -v --count=1
+	staticcheck ./api/...
+test: up
+	REDIS_ADDR=$(REDIS_ADDR) REDIS_PASSWORD=$(REDIS_PASSWORD) go test -v ./api/... --count=1 -p=1
+check: lint test
