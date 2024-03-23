@@ -1,0 +1,40 @@
+name: Go Test
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  REDIS_ADDR: localhost:6379
+  REDIS_PASSWORD: password
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 127.0.0.1:6379:6379
+        env:
+          REDIS_PASSWORD: password
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.22
+        id: go
+      
+      - name: Get dependencies
+        run: go mod download
+      
+      - name: Run tests
+        run: go test ./api/... -v --count=1 -p=1
