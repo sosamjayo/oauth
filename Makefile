@@ -10,6 +10,8 @@ build:
 	docker compose build --no-cache
 
 # Go
+run:
+	REDIS_ADDR=$(REDIS_ADDR) REDIS_PASSWORD=$(REDIS_PASSWORD) go run ./api/main.go
 lint:
 	staticcheck ./api/...
 test: up
